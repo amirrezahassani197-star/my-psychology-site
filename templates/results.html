@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,29 +11,63 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
         tailwind.config = {
-            darkMode:'class',
-            theme:{extend:{fontFamily:{sans:['Vazirmatn','sans-serif']},
-                colors:{accent:{500:'#6366f1',600:'#4f46e5'}}}}
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+                    colors: { accent: { 500: '#6366f1', 600: '#4f46e5' } }
+                }
+            }
         }
     </script>
     <style>
-        body{font-family:'Vazirmatn',sans-serif}
-        .glass{background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.3)}
-        .dark .glass{background:rgba(30,41,59,0.85);border-color:rgba(255,255,255,0.1)}
-        @media print{.no-print{display:none!important}.print-only{display:block!important}}
-        .print-only{display:none}
+        body {
+            font-family: 'Vazirmatn', sans-serif
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3)
+        }
+
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.85);
+            border-color: rgba(255, 255, 255, 0.1)
+        }
+
+        @media print {
+            .no-print {
+                display: none !important
+            }
+
+            .print-only {
+                display: block !important
+            }
+        }
+
+        .print-only {
+            display: none
+        }
     </style>
 </head>
+
 <body class="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-100 transition-colors duration-300">
 
     <!-- Top Bar -->
     <div class="no-print fixed top-0 w-full z-50 glass shadow-sm">
         <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="/" class="text-sm text-gray-500 hover:text-accent-500 transition"><i class="fa-solid fa-arrow-right ml-1"></i> آزمون مجدد</a>
+            <a href="/" class="text-sm text-gray-500 hover:text-accent-500 transition"><i
+                    class="fa-solid fa-arrow-right ml-1"></i> آزمون مجدد</a>
             <h1 class="font-bold text-lg">نتایج آزمون طرحواره یانگ</h1>
             <div class="flex gap-2">
-                <button onclick="window.print()" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition" title="چاپ / PDF"><i class="fa-solid fa-print"></i></button>
-                <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition"><i class="fa-solid fa-moon dark:hidden"></i><i class="fa-solid fa-sun hidden dark:inline text-yellow-400"></i></button>
+                <button onclick="window.print()"
+                    class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition" title="چاپ / PDF"><i
+                        class="fa-solid fa-print"></i></button>
+                <button id="theme-toggle"
+                    class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition"><i
+                        class="fa-solid fa-moon dark:hidden"></i><i
+                        class="fa-solid fa-sun hidden dark:inline text-yellow-400"></i></button>
             </div>
         </div>
     </div>
@@ -44,7 +79,8 @@
 
         <!-- Chart -->
         <div class="glass p-6 md:p-8 rounded-3xl shadow-xl mb-10">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><i class="fa-solid fa-chart-bar text-accent-500"></i> پروفایل طرحواره‌ها</h2>
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><i
+                    class="fa-solid fa-chart-bar text-accent-500"></i> پروفایل طرحواره‌ها</h2>
             <div class="relative" style="height:500px"><canvas id="schemaChart"></canvas></div>
         </div>
 
@@ -53,15 +89,16 @@
 
         <!-- Disclaimer -->
         <div class="glass p-6 rounded-2xl border-r-4 border-amber-500 text-center">
-            <p class="text-sm text-gray-600 dark:text-gray-300">⚕️ این گزارش صرفاً جنبه غربالگری و آموزشی دارد و جایگزین تشخیص بالینی نیست.</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300">⚕️ این گزارش صرفاً جنبه غربالگری و آموزشی دارد و جایگزین
+                تشخیص بالینی نیست.</p>
         </div>
     </div>
 
     <script>
         // Dark Mode
-        const toggle=document.getElementById('theme-toggle');
-        if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');
-        toggle.addEventListener('click',()=>{document.documentElement.classList.toggle('dark');localStorage.setItem('theme',document.documentElement.classList.contains('dark')?'dark':'light')});
+        const toggle = document.getElementById('theme-toggle');
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+        toggle.addEventListener('click', () => { document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light') });
 
         const data = JSON.parse(sessionStorage.getItem('schemaResults') || '{}');
         const results = data.results || {};
@@ -71,12 +108,12 @@
         // Render Summary
         const summaryEl = document.getElementById('summary-section');
         const summaryCards = [
-            {label:'میانگین کلی',value:summary.overall_average||'-',icon:'📊',color:'bg-indigo-100 dark:bg-indigo-900/30'},
-            {label:'طرحواره شدید',value:summary.severe_count||0,icon:'🔴',color:'bg-red-100 dark:bg-red-900/30'},
-            {label:'طرحواره متوسط',value:summary.moderate_count||0,icon:'🟠',color:'bg-orange-100 dark:bg-orange-900/30'},
-            {label:'غیرفعال',value:summary.inactive_count||0,icon:'🟢',color:'bg-green-100 dark:bg-green-900/30'}
+            { label: 'میانگین کلی', value: summary.overall_average || '-', icon: '📊', color: 'bg-indigo-100 dark:bg-indigo-900/30' },
+            { label: 'طرحواره شدید', value: summary.severe_count || 0, icon: '🔴', color: 'bg-red-100 dark:bg-red-900/30' },
+            { label: 'طرحواره متوسط', value: summary.moderate_count || 0, icon: '🟠', color: 'bg-orange-100 dark:bg-orange-900/30' },
+            { label: 'غیرفعال', value: summary.inactive_count || 0, icon: '🟢', color: 'bg-green-100 dark:bg-green-900/30' }
         ];
-        summaryEl.innerHTML = summaryCards.map(c=>`
+        summaryEl.innerHTML = summaryCards.map(c => `
             <div class="glass ${c.color} p-5 rounded-2xl text-center shadow-md">
                 <div class="text-3xl mb-1">${c.icon}</div>
                 <div class="text-2xl font-black">${c.value}</div>
@@ -84,21 +121,23 @@
             </div>`).join('');
 
         // Render Chart
-        if(chartData.labels){
-            new Chart(document.getElementById('schemaChart'),{
-                type:'bar',
-                data:chartData,
-                options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-                    plugins:{legend:{display:false}},
-                    scales:{x:{min:0,max:6,ticks:{font:{family:'Vazirmatn'}}},y:{ticks:{font:{family:'Vazirmatn',size:11}}}}}
+        if (chartData.labels) {
+            new Chart(document.getElementById('schemaChart'), {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { min: 0, max: 6, ticks: { font: { family: 'Vazirmatn' } } }, y: { ticks: { font: { family: 'Vazirmatn', size: 11 } } } }
+                }
             });
         }
 
         // Render Schema Cards
         const cardsEl = document.getElementById('schema-cards');
-        const sorted = Object.values(results).sort((a,b)=>b.score-a.score);
-        cardsEl.innerHTML = sorted.map(s=>{
-            const borderColor = s.score>=4?'border-red-500':s.score>=3?'border-orange-500':s.score>=2?'border-yellow-500':'border-green-500';
+        const sorted = Object.values(results).sort((a, b) => b.score - a.score);
+        cardsEl.innerHTML = sorted.map(s => {
+            const borderColor = s.score >= 4 ? 'border-red-500' : s.score >= 3 ? 'border-orange-500' : s.score >= 2 ? 'border-yellow-500' : 'border-green-500';
             return `
             <div class="glass p-6 rounded-2xl shadow-md border-r-4 ${borderColor}">
                 <div class="flex items-start justify-between mb-3">
@@ -119,57 +158,60 @@
         }).join('');
     </script>
     <!-- Download PDF Button -->
-<div class="no-print fixed bottom-6 left-6 z-50">
-    <button id="download-pdf" class="bg-gradient-to-l from-accent-500 to-purple-600 text-white font-bold px-6 py-3 rounded-full shadow-xl hover:-translate-y-1 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-file-pdf"></i> دانلود PDF
-    </button>
-</div>
+    <div class="no-print fixed bottom-6 left-6 z-50">
+        <button id="download-pdf"
+            class="bg-gradient-to-l from-accent-500 to-purple-600 text-white font-bold px-6 py-3 rounded-full shadow-xl hover:-translate-y-1 transition-all flex items-center gap-2">
+            <i class="fa-solid fa-file-pdf"></i> دانلود PDF
+        </button>
+    </div>
 
-<script>
-document.getElementById('download-pdf').addEventListener('click', async () => {
-    const btn = document.getElementById('download-pdf');
-    btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> در حال ساخت PDF...';
-    btn.disabled = true;
-    
-        // ✅ ارسال نتایج آماده + نوع آزمون
-    const userInfo = JSON.parse(sessionStorage.getItem('userInfo') || '{}');
-    const payload = {
-        results: results,
-        summary: summary,
-        test_type: userInfo.test_type || 'ysq_s3' // ✅ اضافه کردن نوع آزمون
-    };
-    
-    try {
-        const res = await fetch('/api/download-pdf', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify(payload)
+    <script>
+        document.getElementById('download-pdf').addEventListener('click', async () => {
+            const btn = document.getElementById('download-pdf');
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> در حال ساخت PDF...';
+            btn.disabled = true;
+
+            // ✅ ارسال نتایج آماده + نوع آزمون
+            const userInfo = JSON.parse(sessionStorage.getItem('userInfo') || '{}');
+            const payload = {
+                results: results,
+                summary: summary,
+                test_type: userInfo.test_type || 'ysq_s3',
+                user_info: userInfo   // ← این خط اضافه شد
+            };
+
+            try {
+                const res = await fetch('/api/download-pdf', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) throw new Error('خطا در ساخت PDF');
+
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'schema_report.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> دانلود شد';
+            } catch (err) {
+                console.error(err);
+                alert('مشکلی در ساخت PDF پیش آمد. لطفاً دوباره تلاش کنید.');
+                btn.innerHTML = '<i class="fa-solid fa-file-pdf"></i> دانلود PDF';
+            } finally {
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fa-solid fa-file-pdf"></i> دانلود PDF';
+                    btn.disabled = false;
+                }, 2000);
+            }
         });
-        
-        if (!res.ok) throw new Error('خطا در ساخت PDF');
-        
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'schema_report.pdf';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> دانلود شد';
-    } catch (err) {
-        console.error(err);
-        alert('مشکلی در ساخت PDF پیش آمد. لطفاً دوباره تلاش کنید.');
-        btn.innerHTML = '<i class="fa-solid fa-file-pdf"></i> دانلود PDF';
-    } finally {
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fa-solid fa-file-pdf"></i> دانلود PDF';
-            btn.disabled = false;
-        }, 2000);
-    }
-});
-</script>
+    </script>
 </body>
+
 </html>
