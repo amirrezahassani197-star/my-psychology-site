@@ -1,1 +1,166 @@
-.
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آزمون طرحواره یانگ | YSQ</title>
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/vazirmatn@5.0.3/index.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#22c55e', 600: '#16a34a', 700: '#15803d' },
+                        accent: { 500: '#6366f1', 600: '#4f46e5' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(60px);
+            opacity: 0.4;
+            animation: float 8s ease-in-out infinite alternate;
+            border-radius: 50%;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(0) scale(1)
+            }
+
+            to {
+                transform: translateY(-30px) scale(1.1)
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden">
+
+    <!-- Background Blobs -->
+    <div class="blob bg-purple-400 w-72 h-72 top-10 -right-20 fixed"></div>
+    <div class="blob bg-indigo-400 w-96 h-96 bottom-10 -left-20 fixed" style="animation-delay:2s"></div>
+    <div class="blob bg-emerald-300 w-64 h-64 top-1/2 left-1/2 fixed" style="animation-delay:4s"></div>
+
+    <!-- Dark Mode Toggle -->
+    <button id="theme-toggle"
+        class="fixed top-4 left-4 z-50 glass p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+        <i class="fa-solid fa-moon dark:hidden text-xl"></i>
+        <i class="fa-solid fa-sun hidden dark:inline text-xl text-yellow-400"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div class="max-w-2xl w-full">
+
+            <!-- Header -->
+            <div class="text-center mb-10" data-aos="fade-down">
+                <div class="inline-flex items-center justify-center w-20 h-20 glass rounded-3xl mb-6 shadow-xl">
+                    <i class="fa-solid fa-brain text-4xl text-accent-500"></i>
+                </div>
+                <h1
+                    class="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-l from-accent-500 to-purple-600 bg-clip-text text-transparent">
+                    سامانه ارزیابی طرحواره‌ها
+                </h1>
+                <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                    شناخت الگوهای فکری و هیجانی عمیق که از کودکی شکل گرفته‌اند.<br>
+                    <span class="text-sm text-gray-400">(ارزیابی آنلاین + دریافت آنی گزارش PDF)</span>
+                </p>
+            </div>
+
+            <!-- Info Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10" data-aos="fade-up" data-aos-delay="100">
+                <div class="glass p-5 rounded-2xl text-center shadow-md">
+                    <div class="text-3xl mb-2">🧠</div>
+                    <div class="font-bold text-lg">ارزیابی علمی</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">بر اساس مدل یانگ</div>
+                </div>
+                <div class="glass p-5 rounded-2xl text-center shadow-md">
+                    <div class="text-3xl mb-2">📄</div>
+                    <div class="font-bold text-lg">گزارش PDF</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">دریافت آنی نتایج</div>
+                </div>
+                <div class="glass p-5 rounded-2xl text-center shadow-md">
+                    <div class="text-3xl mb-2">🔒</div>
+                    <div class="font-bold text-lg">کاملاً محرمانه</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">بدون ذخیره عمومی</div>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="glass p-5 rounded-2xl mb-8 border-r-4 border-amber-500 shadow-md" data-aos="fade-up"
+                data-aos-delay="200">
+                <div class="flex items-start gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-500 text-xl mt-1"></i>
+                    <div>
+                        <h3 class="font-bold text-amber-700 dark:text-amber-400 mb-1">سلب مسئولیت مهم</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            این آزمون صرفاً جنبه <strong>غربالگری و آموزشی</strong> دارد و جایگزین تشخیص بالینی توسط
+                            روانشناس دارای پروانه نیست. نتایج به هیچ وجه تشخیص اختلال روانی محسوب نمی‌شود.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start Button -->
+            <div class="text-center">
+
+
+
+
+
+                <a href="/user-info"
+                    class="inline-flex items-center gap-3 bg-gradient-to-l from-accent-500 to-purple-600 hover:from-accent-600 hover:to-purple-700 text-white font-bold text-xl px-12 py-5 rounded-2xl shadow-2xl shadow-accent-500/30 hover:shadow-accent-500/50 hover:-translate-y-1 transition-all duration-300">
+                    <i class="fa-solid fa-play"></i>
+                    <span>ورود به سامانه و شروع</span>
+                </a>
+                <p class="mt-4 text-sm text-gray-400">بدون نیاز به ثبت‌نام • نتایج فوری • محرمانه</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Dark Mode Toggle
+        const toggle = document.getElementById('theme-toggle');
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+        toggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+    </script>
+</body>
+
+</html>
