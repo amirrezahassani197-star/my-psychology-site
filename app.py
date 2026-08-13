@@ -7,8 +7,11 @@ from flask import Flask, render_template, jsonify, request, send_file
 from questions import get_questions, SCHEMAS
 from scoring import calculate_scores, get_sorted_results, get_chart_data, get_summary, generate_interpretation
 import json
+import requests
 import os
 import io
+# URL وبهوک n8n - این مقدار را با URL واقعی خود عوض کنید
+N8N_WEBHOOK_URL = "https://amirreza5700.app.n8n.cloud/webhook-test/schema-results"
 
 app = Flask(__name__)
 
@@ -95,18 +98,33 @@ from report_generator import generate_pdf
 
 @app.route("/api/download-pdf", methods=["POST"])
 def download_pdf():
-    """تولید و دانلود PDF بر اساس نتایج آماده"""
+    """تولید PDF + ارسال داده‌ها به n8n"""
     data = request.get_json()
     
     results = data.get('results', {})
     summary = data.get('summary', {})
-    test_type = data.get('test_type', 'ysq_s3') # ✅ دریافت نوع آزمون
+    test_type = data.get('test_type', 'ysq_s3')
+    user_info = data.get('user_info', {})
     
     if not results:
-        return jsonify({"error": "نتیجه‌ای برای ساخت PDF یافت نشد"}), 400
-        
-    # ✅ ارسال نوع آزمون به تولیدکننده PDF
+        return jsonify({"error": "نتیجه‌ای یافت نشد"}), 400
+    
+    # ۱. ساخت PDF (مثل قبل)
     pdf_path = generate_pdf(results, summary, test_type=test_type)
+    
+    # ۲. ارسال داده‌ها به n8n (بدون معطل کردن کاربر)
+    try:
+        payload = {
+            "user_info": user_info,
+            "summary": summary,
+            "test_type": test_type
+        }
+        requests.post(N8N_WEBHOOK_URL, json=payload, timeout=5)
+    except Exception as e:
+        # اگر n8n در دسترس نبود، دانلود PDF نباید مختل شود
+        print(f"⚠️ خطا در ارسال به n8n: {e}")
+    
+    # ۳. تحویل PDF به کاربر
     return send_file(pdf_path, as_attachment=True, download_name="schema_report.pdf")
 
 if __name__ == "__main__":
