@@ -11,7 +11,7 @@ import requests
 import os
 import io
 # URL وبهوک n8n - این مقدار را با URL واقعی خود عوض کنید
-N8N_WEBHOOK_URL = "https://amirreza5700.app.n8n.cloud/webhook-test/schema-results"
+N8N_WEBHOOK_URL = "https://amirreza5700.app.n8n.cloud/webhook/schema-results"
 
 app = Flask(__name__)
 
