@@ -80,11 +80,11 @@ def draw_header_footer(canvas, doc):
 
 def generate_chart_drawing(results):
     sorted_items = sorted(results.values(), key=lambda x: x["score"], reverse=True)
-    drawing = Drawing(450, 320)
-    drawing.add(Rect(0, 0, 450, 320, fillColor=COLORS["bg_light"], strokeColor=None))
-    
-    start_y = 300
-    for i, item in enumerate(sorted_items[:15]):
+    num_items = len(sorted_items)
+    drawing_height = max(320, num_items * 20 + 40)
+    drawing = Drawing(450, drawing_height)
+    start_y = drawing_height - 20
+    for i, item in enumerate(sorted_items):  # ← همه طرحواره‌ها
         y = start_y - i * 18
         bar_width = (item["score"] / 6.0) * 250
         color = COLORS["severe"] if item["score"] >= 4 else COLORS["moderate"] if item["score"] >= 3 else COLORS["mild"] if item["score"] >= 2 else COLORS["inactive"]
