@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آزمون طرحواره یانگ | سوالات</title>
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/vazirmatn@5.0.3/index.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+                    colors: { accent: { 500: '#6366f1', 600: '#4f46e5' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.85);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected {
+            background: #6366f1 !important;
+            color: white !important;
+            border-color: #6366f1 !important;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .slide-enter {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0)
+            }
+        }
+
+        .progress-fill {
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- Top Bar -->
+    <div class="fixed top-0 w-full z-50 glass shadow-sm">
+        <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="/" class="text-sm text-gray-500 hover:text-accent-500 transition"><i
+                    class="fa-solid fa-arrow-right ml-1"></i> بازگشت</a>
+            <div class="text-sm font-bold text-gray-600 dark:text-gray-300">
+                سوال <span id="current-num">1</span> از <span id="total-num">90</span>
+            </div>
+            <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition">
+                <i class="fa-solid fa-moon dark:hidden"></i>
+                <i class="fa-solid fa-sun hidden dark:inline text-yellow-400"></i>
+            </button>
+        </div>
+        <!-- Progress Bar -->
+        <div class="w-full h-1.5 bg-gray-200 dark:bg-slate-700">
+            <div id="progress-bar"
+                class="progress-fill h-full bg-gradient-to-l from-accent-500 to-purple-600 rounded-l-full"
+                style="width:0%"></div>
+        </div>
+    </div>
+
+    <!-- Question Container -->
+    <div class="min-h-screen flex items-center justify-center p-4 pt-20">
+        <div class="max-w-2xl w-full">
+            <div id="question-card" class="glass p-8 md:p-10 rounded-3xl shadow-xl slide-enter">
+                <h2 id="question-text" class="text-xl md:text-2xl font-bold mb-8 leading-relaxed text-center"></h2>
+
+                <!-- Likert Options -->
+                <div id="options-container" class="space-y-3">
+                    <!-- Options injected by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark Mode
+        const toggle = document.getElementById('theme-toggle');
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+        toggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        const LIKERT = [
+            { value: 1, label: "اصلاً درست نیست", emoji: "😐" },
+            { value: 2, label: "تا حدودی درست نیست", emoji: "🤔" },
+            { value: 3, label: "تا حدودی درست است", emoji: "🙂" },
+            { value: 4, label: "نسبتاً درست است", emoji: "😌" },
+            { value: 5, label: "کاملاً درست است", emoji: "😔" },
+            { value: 6, label: "بسیار زیاد درست است", emoji: "💔" }
+        ];
+
+        let questions = [];
+        let currentIndex = 0;
+        let answers = {};
+
+        // Load questions from backend
+        async function loadQuestions() {
+            const userInfo = JSON.parse(sessionStorage.getItem('userInfo') || '{}');
+            const testType = userInfo.test_type || 'ysq_s3';
+
+            const res = await fetch(`/api/questions?type=${testType}`);
+            questions = await res.json();
+            document.getElementById('total-num').textContent = questions.length;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            document.getElementById('current-num').textContent = currentIndex + 1;
+            document.getElementById('question-text').textContent = q.text;
+            document.getElementById('progress-bar').style.width = `${((currentIndex) / questions.length) * 100}%`;
+
+            // Animation reset
+            const card = document.getElementById('question-card');
+            card.classList.remove('slide-enter');
+            void card.offsetWidth;
+            card.classList.add('slide-enter');
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            LIKERT.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn w-full glass p-4 rounded-xl text-right flex items-center gap-4 hover:bg-gray-100 dark:hover:bg-slate-700 border-2 border-transparent';
+                btn.innerHTML = `<span class="text-2xl">${opt.emoji}</span><span class="font-semibold">${opt.label}</span>`;
+                btn.onclick = () => selectAnswer(q.id, opt.value, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(qId, value, btnEl) {
+            answers[qId] = value;
+
+            // Visual feedback
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btnEl.classList.add('selected');
+
+            // Auto advance after short delay
+            setTimeout(() => {
+                currentIndex++;
+                if (currentIndex < questions.length) {
+                    renderQuestion();
+                } else {
+                    submitAnswers();
+                }
+            }, 300);
+        }
+
+        async function submitAnswers() {
+            document.getElementById('question-text').textContent = '⏳ در حال تحلیل نتایج...';
+            document.getElementById('options-container').innerHTML = '<div class="text-center py-8"><div class="inline-block w-10 h-10 border-4 border-accent-500 border-t-transparent rounded-full animate-spin"></div></div>';
+
+            const userInfo = JSON.parse(sessionStorage.getItem('userInfo') || '{}');
+            const testType = userInfo.test_type || 'ysq_s3';
+
+            const res = await fetch('/api/results', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    answers: answers,
+                    test_type: testType
+                })
+            });
+            const data = await res.json();
+
+            // Store results and redirect
+            sessionStorage.setItem('schemaResults', JSON.stringify(data));
+            window.location.href = '/results';
+        }
+
+        loadQuestions();
+    </script>
+</body>
+
+</html>

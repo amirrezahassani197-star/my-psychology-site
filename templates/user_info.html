@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اطلاعات کاربر | آزمون طرحواره</title>
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/vazirmatn@5.0.3/index.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Vazirmatn', 'sans-serif'] },
+                    colors: { accent: { 500: '#6366f1', 600: '#4f46e5' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.85);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(60px);
+            opacity: 0.4;
+            animation: float 8s ease-in-out infinite alternate;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(0) scale(1)
+            }
+
+            to {
+                transform: translateY(-30px) scale(1.1)
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-100 transition-colors duration-300 flex items-center justify-center p-4 overflow-x-hidden">
+
+    <!-- Background Blobs -->
+    <div class="blob bg-purple-400 w-72 h-72 top-10 -right-20 fixed"></div>
+    <div class="blob bg-indigo-400 w-96 h-96 bottom-10 -left-20 fixed" style="animation-delay:2s"></div>
+
+    <!-- Dark Mode Toggle -->
+    <button id="theme-toggle"
+        class="fixed top-4 left-4 z-50 glass p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+        <i class="fa-solid fa-moon dark:hidden text-xl"></i>
+        <i class="fa-solid fa-sun hidden dark:inline text-xl text-yellow-400"></i>
+    </button>
+
+    <div class="max-w-md w-full relative z-10">
+        <div class="glass p-8 rounded-3xl shadow-2xl">
+
+            <div class="text-center mb-8">
+                <div
+                    class="inline-flex items-center justify-center w-16 h-16 bg-accent-100 dark:bg-accent-900/30 rounded-full mb-4">
+                    <i class="fa-solid fa-user-pen text-3xl text-accent-500"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">اطلاعات مراجع</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400">لطفاً پیش از شروع آزمون، اطلاعات زیر را تکمیل
+                    کنید.<br>(اطلاعات شما کاملاً محرمانه است)</p>
+            </div>
+
+            <form id="info-form" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-semibold mb-1.5">نام و نام خانوادگی <span
+                            class="text-red-500">*</span></label>
+                    <input type="text" id="fullname" required
+                        class="w-full bg-white/50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-1.5">شماره تماس <span
+                            class="text-red-500">*</span></label>
+                    <input type="tel" id="phone" required pattern="09[0-9]{9}" placeholder="09123456789"
+                        class="w-full bg-white/50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all"
+                        dir="ltr" style="text-align: right;">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-1.5">ایمیل <span
+                            class="text-gray-400 font-normal">(اختیاری - برای دریافت گزارش)</span></label>
+                    <input type="email" id="email" placeholder="example@mail.com"
+                        class="w-full bg-white/50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all"
+                        dir="ltr" style="text-align: right;">
+                </div>
+
+                <div class="pt-2">
+                    <label class="block text-sm font-semibold mb-3">نوع آزمون را انتخاب کنید:</label>
+                    <div class="grid grid-cols-1 gap-3">
+                        <label class="cursor-pointer relative">
+                            <input type="radio" name="test_type" value="ysq_s3" checked class="peer sr-only">
+                            <div
+                                class="border-2 border-gray-200 dark:border-slate-700 peer-checked:border-accent-500 peer-checked:bg-accent-50 dark:peer-checked:bg-accent-900/20 rounded-xl p-4 transition-all hover:border-gray-300">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-accent-600 dark:text-accent-400">آزمون کوتاه
+                                        (YSQ-S3)</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded-full">۱۵
+                                        دقیقه</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">۹۰ سوال - مناسب برای غربالگری سریع</p>
+                            </div>
+                        </label>
+
+                        <label class="cursor-pointer relative">
+                            <input type="radio" name="test_type" value="ysq_l3" class="peer sr-only">
+                            <div
+                                class="border-2 border-gray-200 dark:border-slate-700 peer-checked:border-accent-500 peer-checked:bg-accent-50 dark:peer-checked:bg-accent-900/20 rounded-xl p-4 transition-all hover:border-gray-300">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-accent-600 dark:text-accent-400">آزمون جامع
+                                        (YSQ-L3)</span>
+                                    <span class="text-xs bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded-full">۴۵
+                                        دقیقه</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">۲۳۲+ سوال - ارزیابی دقیق بالینی</p>
+                            </div>
+                        </label>
+                    </div>
+                    </label>
+                </div>
+        </div>
+
+        <button type="submit"
+            class="w-full bg-gradient-to-l from-accent-500 to-purple-600 hover:from-accent-600 hover:to-purple-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-accent-500/30 transition-all flex justify-center items-center gap-2 mt-6">
+            <span>شروع آزمون</span>
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        </form>
+    </div>
+    </div>
+
+    <script>
+        // Dark Mode
+        const toggle = document.getElementById('theme-toggle');
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+        toggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Form Submit
+        document.getElementById('info-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const userInfo = {
+                fullname: document.getElementById('fullname').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                test_type: document.querySelector('input[name="test_type"]:checked').value
+            };
+
+            // ذخیره در حافظه موقت مرورگر
+            sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+            // هدایت به صفحه آزمون
+            window.location.href = '/quiz';
+        });
+    </script>
+</body>
+
+</html>
